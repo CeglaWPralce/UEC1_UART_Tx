@@ -17,8 +17,6 @@ always_ff @(posedge clk or negedge rst_n)  begin
     end
 
 end
-
-
 /*
 kiedy clk posedge, jeśli negedge rst_n
 to gdy rst_n przyjmuje logiczne 0

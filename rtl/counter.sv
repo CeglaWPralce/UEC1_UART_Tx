@@ -1,33 +1,29 @@
 module counter #(
-    parameter int LIMIT = 500000
+    parameter MAX_VALUE = 31,
+	parameter WIDTH = 5
 )(
     input  logic clk,
     input  logic rst_n,
     input  logic enabled,
+    output logic [WIDTH-1:0] value,
     output logic overflow
 );
 
-logic [31:0] value, value_nxt;
+    
 
-always_ff @(posedge clk or negedge rst_n) begin
-    if (!rst_n)
-        value <= 'b0;
-    else
-        value <= value_nxt;
-end
-
-always_comb begin
-    value_nxt = value;
-    overflow  = 1'b0;
-
-    if (enabled) begin
-        if (value == LIMIT) begin
-            value_nxt = 'b0;
-            overflow  = 1'b1;
-        end else begin
-            value_nxt = value + 1;
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            value <= '0;
+            overflow <= 1'b0;
+        end else if (enabled) begin
+            if (value == MAX_VALUE) begin
+                value <= '0;
+                overflow <= 1'b1;
+            end else begin
+                value <= value + 1;
+                overflow <= 1'b0;
+            end
         end
     end
-end
 
 endmodule

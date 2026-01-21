@@ -23,9 +23,9 @@ typedef enum logic [1:0] {
 /* Local variables and signals */
 
 state_t state, state_nxt;
-logic [3:0] s, s_nxt;
-logic [2:0] n, n_nxt;
-logic [7:0] b, b_nxt;
+logic [3:0] s, s_nxt; //numer of ticks
+logic [2:0] n, n_nxt; //number of bits
+logic [7:0] b, b_nxt; //bit holder
 
 /* State Sequencer Logic */
 
@@ -34,12 +34,12 @@ always_ff @(posedge clk, negedge rst_n)
         state <= IDLE;
         s <= 0;
         n <= 0;
-        b <= 0;
+        b <= 0; //in  case of rst_n  signal: state =  idle and all bits, ticks are set to 0
     end else begin
         state <= state_nxt;
         s <= s_nxt;
         n <= n_nxt;
-        b <= b_nxt;
+        b <= b_nxt; 
     end
 
 /* Next State Decode Logic */
