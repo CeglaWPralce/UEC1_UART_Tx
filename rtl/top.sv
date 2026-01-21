@@ -13,7 +13,7 @@ module top (
 
     // generator s_tick
     counter #(
-        .LIMIT(8)
+        .LIMIT(64)
     ) u_counter_s_tick (
         .clk(clk),
         .rst_n(rst_n),
@@ -23,7 +23,7 @@ module top (
 
     // generator tx_start (impuls)
     counter #(
-        .LIMIT(64)
+        .LIMIT(512)
     ) u_counter_tx_start (
         .clk(clk),
         .rst_n(rst_n),
@@ -33,7 +33,7 @@ module top (
 
     uart_tx #(
         .DBIT(8),
-        .SB_TICK(16)
+        .SB_TICK(8)
     ) u_uart_tx (
         .clk(clk),
         .rst_n(rst_n),
