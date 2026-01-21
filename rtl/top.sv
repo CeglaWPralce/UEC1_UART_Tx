@@ -23,7 +23,7 @@ module top (
 
     // generator tx_start (impuls)
     counter #(
-        .LIMIT(8)
+        .LIMIT(64)
     ) u_counter_tx_start (
         .clk(clk),
         .rst_n(rst_n),
