@@ -1,0 +1,6 @@
+sv work ../../rtl/top.sv \
+        ../../rtl/counter.sv \
+        ../../rtl/uart_tx_out_buffer.sv \
+        ../../rtl/uart_tx.sv \
+        top_test.sv
+        

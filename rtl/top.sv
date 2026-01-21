@@ -3,48 +3,33 @@ module top (
     input  logic       rst_n,
     input  logic [7:0] din,
     output logic       tx_buf,
-    output logic       tx_done_tick_buf
+    output logic       tx_done_tick_buf,
+    output logic       tx
 );
 
-    logic overflow_s;
-    logic overflow_tx;
+    logic s_tick;
+    logic tx_start;
     logic tx_done_tick;
-    logic tx;
-    logic tx_start_reg;
 
-    logic [12:0] counter_s_value;
-    logic [15:0] counter_tx_value;
-
+    // generator s_tick
     counter #(
-        .MAX_VALUE(50), // 326
-        .WIDTH(9)
+        .LIMIT(8)
     ) u_counter_s_tick (
         .clk(clk),
         .rst_n(rst_n),
         .enabled(1'b1),
-        .value(counter_s_value),
-        .overflow(overflow_s)
+        .overflow(s_tick)
     );
 
+    // generator tx_start (impuls)
     counter #(
-        .MAX_VALUE(100), //  49999
-        .WIDTH(16)
+        .LIMIT(8)
     ) u_counter_tx_start (
         .clk(clk),
         .rst_n(rst_n),
-        .enabled(1'b1),
-        .value(counter_tx_value),
-        .overflow(overflow_tx)
+        .enabled(~tx_done_tick), // nie startuj gdy UART zajęty
+        .overflow(tx_start)
     );
-
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n)
-            tx_start_reg <= 1'b0;
-        else if (overflow_tx)
-            tx_start_reg <= 1'b1;
-        else if (tx_done_tick)
-            tx_start_reg <= 1'b0;
-    end
 
     uart_tx #(
         .DBIT(8),
@@ -52,8 +37,8 @@ module top (
     ) u_uart_tx (
         .clk(clk),
         .rst_n(rst_n),
-        .tx_start(tx_start_reg),
-        .s_tick(overflow_s),
+        .tx_start(tx_start),
+        .s_tick(s_tick),
         .din(din),
         .tx_done_tick(tx_done_tick),
         .tx(tx)
